@@ -14,13 +14,6 @@ const Invoices = () => {
     invoice_date: '',
     tracking_code: '',
     client_account: '',
-    product_name: '',
-    product_link: '',
-    color: '',
-    quantity: '',
-    size: '',
-    product_code: '',
-    sum: '',
     products: [
       {
         shop_name: '',
@@ -76,9 +69,9 @@ const Invoices = () => {
         invoiceDetails
       });
       setDocxUrl(response.data.docxUrl);
-      setError(null); // Clear any previous errors
+      setError(null);
     } catch (error) {
-      const errorMessage = error.response?.data?.errors || 'Error creating invoice';
+      const errorMessage = error.response?.data?.errors || 'Ошибка при создании счета';
       setError(Array.isArray(errorMessage) ? errorMessage.map(e => e.msg).join(', ') : errorMessage);
     }
   };
@@ -86,7 +79,7 @@ const Invoices = () => {
   return (
     <Paper elevation={3} style={{ padding: '20px', marginTop: '20px' }}>
       <Typography variant="h4" gutterBottom align="center">
-        Create Invoice
+        Создать счет
       </Typography>
       
       <Grid container spacing={3}>
@@ -94,7 +87,7 @@ const Invoices = () => {
           <TextField
             fullWidth
             margin="normal"
-            label="Client F.I.O"
+            label="Клиент Ф.И.О"
             value={clientId}
             onChange={e => setClientId(e.target.value)}
             InputProps={{ style: { width: '100%', height: '48px' } }}
@@ -104,7 +97,7 @@ const Invoices = () => {
           <TextField
             fullWidth
             margin="normal"
-            label="Client Phone"
+            label="Телефон клиента"
             value={invoiceDetails.client_phone}
             onChange={e => setInvoiceDetails({ ...invoiceDetails, client_phone: e.target.value })}
             InputProps={{ style: { width: '100%', height: '48px' } }}
@@ -114,7 +107,7 @@ const Invoices = () => {
           <TextField
             fullWidth
             margin="normal"
-            label="Client Address"
+            label="Адрес клиента"
             value={invoiceDetails.client_address}
             onChange={e => setInvoiceDetails({ ...invoiceDetails, client_address: e.target.value })}
             InputProps={{ style: { width: '100%', height: '48px' } }}
@@ -124,7 +117,7 @@ const Invoices = () => {
           <TextField
             fullWidth
             margin="normal"
-            label="Invoice Date"
+            label="Дата счета"
             type="date"
             value={invoiceDetails.invoice_date}
             onChange={e => setInvoiceDetails({ ...invoiceDetails, invoice_date: e.target.value })}
@@ -136,7 +129,7 @@ const Invoices = () => {
           <TextField
             fullWidth
             margin="normal"
-            label="Tracking Code"
+            label="Код отслеживания"
             value={invoiceDetails.tracking_code}
             onChange={e => setInvoiceDetails({ ...invoiceDetails, tracking_code: e.target.value })}
             InputProps={{ style: { width: '100%', height: '48px' } }}
@@ -146,7 +139,7 @@ const Invoices = () => {
           <TextField
             fullWidth
             margin="normal"
-            label="Client Account"  // New field
+            label="Личный кабинет клиента"  
             value={invoiceDetails.client_account}
             onChange={e => setInvoiceDetails({ ...invoiceDetails, client_account: e.target.value })}
             InputProps={{ style: { width: '100%', height: '48px' } }}
@@ -156,34 +149,35 @@ const Invoices = () => {
           <Grid item xs={12} key={index}>
             <Box mb={3} p={2} border={1} borderColor="grey.300" borderRadius={2}>
               <Typography variant="h6" gutterBottom>
-                Product {index + 1}
+                Продукт {index + 1}
               </Typography>
               <Grid container spacing={2}>
-              <Grid item xs={12} sm={6} md={4}>
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Shop Name</InputLabel>
-            <Select
-              value={invoiceDetails.shop_name}
-              onChange={e => setInvoiceDetails({ ...invoiceDetails, shop_name: e.target.value })}
-              label="Shop Name"
-              sx={{ width: '100%', height: '48px' }}
-            >
-              <MenuItem value="Rakuten">Rakuten</MenuItem>
-              <MenuItem value="Zara">Zara</MenuItem>
-              <MenuItem value="Zozotown">Zozotown</MenuItem>
-              <MenuItem value="Uniqlo">Uniqlo</MenuItem>
-              <MenuItem value="Muji">Muji</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  <FormControl fullWidth margin="normal">
+                    <InputLabel>Название магазина</InputLabel>
+                    <Select
+                      name="shop_name"
+                      value={product.shop_name}
+                      onChange={e => handleProductChange(index, e)}
+                      label="Название магазина"
+                      sx={{ width: '100%', height: '48px' }}
+                    >
+                      <MenuItem value="Rakuten">Rakuten</MenuItem>
+                      <MenuItem value="Zara">Zara</MenuItem>
+                      <MenuItem value="Zozotown">Zozotown</MenuItem>
+                      <MenuItem value="Uniqlo">Uniqlo</MenuItem>
+                      <MenuItem value="Muji">Muji</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
                 <Grid item xs={12} sm={6} md={4}>
                   <TextField
                     fullWidth
                     margin="normal"
-                    label="Product Name"
+                    label="Название продукта"
                     name="product_name"
-                    value={invoiceDetails.product_name}
-                    onChange={e => setInvoiceDetails({ ...invoiceDetails, product_name: e.target.value })}
+                    value={product.product_name}
+                    onChange={e => handleProductChange(index, e)}
                     InputProps={{ style: { width: '100%', height: '48px' } }}
                   />
                 </Grid>
@@ -191,10 +185,10 @@ const Invoices = () => {
                   <TextField
                     fullWidth
                     margin="normal"
-                    label="Product Link"
+                    label="Ссылка на продукт"
                     name="product_link"
-                    value={invoiceDetails.product_link}
-                    onChange={e => setInvoiceDetails({ ...invoiceDetails, product_link: e.target.value })}
+                    value={product.product_link}
+                    onChange={e => handleProductChange(index, e)}
                     InputProps={{ style: { width: '100%', height: '48px' } }}
                   />
                 </Grid>
@@ -202,10 +196,10 @@ const Invoices = () => {
                   <TextField
                     fullWidth
                     margin="normal"
-                    label="Color"
+                    label="Цвет"
                     name="color"
-                    value={invoiceDetails.color}
-                    onChange={e => setInvoiceDetails({ ...invoiceDetails, color: e.target.value })}
+                    value={product.color}
+                    onChange={e => handleProductChange(index, e)}
                     InputProps={{ style: { width: '100%', height: '48px' } }}
                   />
                 </Grid>
@@ -213,11 +207,11 @@ const Invoices = () => {
                   <TextField
                     fullWidth
                     margin="normal"
-                    label="Quantity"
+                    label="Количество"
                     name="quantity"
                     type="number"
-                    value={invoiceDetails.quantity}
-                    onChange={e => setInvoiceDetails({ ...invoiceDetails, quantity: e.target.value })}
+                    value={product.quantity}
+                    onChange={e => handleProductChange(index, e)}
                     InputProps={{ style: { width: '100%', height: '48px' } }}
                   />
                 </Grid>
@@ -225,10 +219,10 @@ const Invoices = () => {
                   <TextField
                     fullWidth
                     margin="normal"
-                    label="Size"
+                    label="Размер"
                     name="size"
-                    value={invoiceDetails.size}
-                    onChange={e => setInvoiceDetails({ ...invoiceDetails, size: e.target.value })}
+                    value={product.size}
+                    onChange={e => handleProductChange(index, e)}
                     InputProps={{ style: { width: '100%', height: '48px' } }}
                   />
                 </Grid>
@@ -236,10 +230,10 @@ const Invoices = () => {
                   <TextField
                     fullWidth
                     margin="normal"
-                    label="Product Code"
+                    label="Код продукта"
                     name="product_code"
-                    value={invoiceDetails.product_code}
-                    onChange={e => setInvoiceDetails({ ...invoiceDetails, product_code: e.target.value })}
+                    value={product.product_code}
+                    onChange={e => handleProductChange(index, e)}
                     InputProps={{ style: { width: '100%', height: '48px' } }}
                   />
                 </Grid>
@@ -247,11 +241,11 @@ const Invoices = () => {
                   <TextField
                     fullWidth
                     margin="normal"
-                    label="Amount"
-                    name="sum"
+                    label="Сумма"
+                    name="amount"
                     type="number"
-                    value={invoiceDetails.sum}
-                    onChange={e => setInvoiceDetails({ ...invoiceDetails, sum: e.target.value })}
+                    value={product.amount}
+                    onChange={e => handleProductChange(index, e)}
                     InputProps={{ style: { width: '100%', height: '48px' } }}
                   />
                 </Grid>
@@ -268,10 +262,10 @@ const Invoices = () => {
         <Grid item xs={12}>
           <Box display="flex" justifyContent="space-between">
             <Button variant="contained" color="primary" onClick={addProduct}>
-              Add Product
+              Добавить продукт
             </Button>
             <Button variant="contained" color="secondary" onClick={createInvoice}>
-              Generate Invoice
+              Сгенерировать счет
             </Button>
           </Box>
         </Grid>
@@ -284,9 +278,9 @@ const Invoices = () => {
 
         {docxUrl && (
           <Grid item xs={12}>
-            <Typography variant="h6">Download Invoice</Typography>
+            <Typography variant="h6">Скачать счет</Typography>
             <Link href={docxUrl} download="invoice.docx">
-              Click here to download
+              Нажмите здесь, чтобы скачать
             </Link>
           </Grid>
         )}
