@@ -71,7 +71,7 @@ const Invoices = () => {
 
   const createInvoice = async () => {
     try {
-      const response = await axios.post('https://loho-app-5ca1033b0269.herokuapp.com/api/invoices/generate-docx', {
+      const response = await axios.post('https://your-app.herokuapp.com/api/invoices/generate-docx', {
         clientId,
         invoiceDetails
       });
